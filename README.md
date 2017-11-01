@@ -1,2 +1,2 @@
 # Gaia-data
-Process Gaia astrometric data and export to .xml
+Download and process Gaia astrometric data, and export to .xml
