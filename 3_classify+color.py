@@ -45,14 +45,14 @@ def Classify():
     i = 0; j = 0
     # split dwarf and giants into seperate dataframes
     for row in csvData.itertuples():
-    	if row.size == 'dwarf':
-    		if i >= 0:
-    			dwarfMags.loc[i, 'Mag'] = csvData.loc[row.Index, 'M']
-    			i += 1
-    	elif row.size == 'giant':
-    		if j >= 0:
-    			giantMags.loc[j, 'Mag'] = csvData.loc[row.Index, 'M']
-    			j += 1
+        if row.size == 'dwarf':
+            if i >= 0:
+                dwarfMags.loc[i, 'Mag'] = csvData.loc[row.Index, 'M']
+                i += 1
+        elif row.size == 'giant':
+            if j >= 0:
+                giantMags.loc[j, 'Mag'] = csvData.loc[row.Index, 'M']
+                j += 1
 
     dwarfBins = dwarfData['Mv']
     dwarfLabels = dwarfData['B-V']
@@ -68,17 +68,18 @@ def Classify():
     giantMags['BV'] = pd.to_numeric(giantMags['BV'], errors='coerce')
     giantMags['BV'] = giantMags['BV'].fillna(-0.16)
 
-    k = 0; l = 0
+    k = 0; l = 0; totalRows = 0
     # hack table back together
     for row in csvData.itertuples():
-    	if row.size == 'dwarf':
-    		if k >= 0:
-    			csvData.loc[row.Index, 'BV'] = dwarfMags.loc[k, 'BV']
-    			k += 1
-    	elif row.size == 'giant':
-    		if l >= 0:
-    			csvData.loc[row.Index, 'BV'] = giantMags.loc[l, 'BV']
-    			l += 1
+        if row.size == 'dwarf':
+            if k >= 0:
+                csvData.loc[row.Index, 'BV'] = dwarfMags.loc[k, 'BV']
+                k += 1
+        elif row.size == 'giant':
+            if l >= 0:
+                csvData.loc[row.Index, 'BV'] = giantMags.loc[l, 'BV']
+                l += 1
+        totalRows += 1
 
     # Finally use BV to find a value for H -- add min to every number, divide by new max and * 100
     minBV = min(csvData['BV'])
@@ -86,7 +87,7 @@ def Classify():
     # print('minH = ', minBV); print('maxBV = ', maxBV)
 
     for row in csvData.itertuples():
-    	csvData.loc[row.Index, 'H'] = (csvData.loc[row.Index, 'BV'] + abs(minBV))/maxBV * 280
+        csvData.loc[row.Index, 'H'] = (csvData.loc[row.Index, 'BV'] + abs(minBV))/maxBV * 280
 
     print(np.max(csvData['H']))
 
@@ -96,5 +97,6 @@ def Classify():
     # print(csvData)
 
     csvData.to_csv('gaia_colored.csv', sep=',', encoding='utf-8', index=False )
+    print('Rows processed: ', totalRows)
     
 Classify()
