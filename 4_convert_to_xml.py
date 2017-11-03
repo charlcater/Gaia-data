@@ -4,8 +4,8 @@ import os
 directory  = os.path.dirname(os.path.abspath(__file__))
 os.chdir(directory)
 
-csvFile = 'gaiadata.csv'
-xmlFile = 'gaiadatatest.xml'
+csvFile = 'gaia_colored.csv'
+xmlFile = 'gaia_colored.xml'
 
 def ConvertToXML():
 
